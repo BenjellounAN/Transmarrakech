@@ -1964,6 +1964,7 @@
 </head>
 
 <body>
+    <div id="loader-placeholder"></div>
   <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <a href="#" class="logo">
@@ -2850,6 +2851,14 @@ mix-blend-mode: hard-light;
     });
     // Also check on DOM content loaded
     document.addEventListener("DOMContentLoaded", reveal);
+
+    //loading page 
+    fetch('loader.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('loader-placeholder').innerHTML = data;
+      });
+
   </script>
 </body>
 
