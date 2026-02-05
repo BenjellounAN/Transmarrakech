@@ -151,25 +151,25 @@
 </style>
 
 <script>
-  // كود JavaScript لإخفاء شاشة التحميل
+  // إخفاء شاشة التحميل بعد تحميل الصفحة
   window.addEventListener('load', function() {
-    setTimeout(function() {
-      const loadingScreen = document.getElementById('loading-screen');
-      if (loadingScreen) {
-        loadingScreen.style.opacity = '0';
-        loadingScreen.style.transition = 'opacity 0.5s ease';
-        setTimeout(function() {
-          loadingScreen.style.display = 'none';
-        }, 500);
-      }
-    }, 3000);
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+      // اجعل الإخفاء تدريجي خلال 2 ثانية
+      loadingScreen.style.transition = 'opacity 2s ease';
+      loadingScreen.style.opacity = '0';
+      // بعد انتهاء الـ2 ثانية، أخفِ العنصر
+      setTimeout(function() {
+        loadingScreen.style.display = 'none';
+      }, 2000);
+    }
   });
 
-  // احتياطي: إذا استغرقت الصفحة وقتاً طويلاً
+  // احتياطي: إذا الصفحة استغرقت وقت طويل
   setTimeout(function() {
     const loadingScreen = document.getElementById('loading-screen');
     if (loadingScreen && loadingScreen.style.display !== 'none') {
       loadingScreen.style.display = 'none';
     }
-  }, 8000);
+  }, 4000); // احتياطي أسرع لأننا قللنا الوقت
 </script>
