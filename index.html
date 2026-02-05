@@ -2853,29 +2853,41 @@ mix-blend-mode: hard-light;
     // Also check on DOM content loaded
     document.addEventListener("DOMContentLoaded", reveal);
 
-    //loading fetch('loader.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('loader-placeholder').innerHTML = data;
+    // تحميل شاشة التحميل من ملف منفصل
+fetch('loader.html')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.text();
+  })
+  .then(data => {
+    document.getElementById('loader-placeholder').innerHTML = data;
+    
+    // الآن نحصل على العنصر loader بعد تحميله
+    const loader = document.getElementById('loading-screen');
+    
+    if (loader) {
+      // بعد تحميل الصفحة بالكامل، نبدأ الإخفاء
+      window.addEventListener('load', function() {
+        // مدة ظهور الشاشة قبل الاختفاء (مثال: 2 ثانية)
+        const showDuration = 2000; 
 
-        // الآن نحصل على العنصر loader
-        const loader = document.getElementById('loading-screen');
-
-        // بعد تحميل الصفحة بالكامل، نبدأ الإخفاء
-        window.addEventListener('load', function() {
-          // مدة ظهور الشاشة قبل الاختفاء (مثال: 2 ثانية)
-          const showDuration = 2000; 
-
+        setTimeout(function() {
+          loader.style.transition = 'opacity 2s ease'; // مدة الاختفاء
+          loader.style.opacity = '0';
           setTimeout(function() {
-            loader.style.transition = 'opacity 2s ease'; // مدة الاختفاء
-            loader.style.opacity = '0';
-            setTimeout(function() {
-              loader.remove(); // إزالة العنصر نهائياً
-            }, 2000); // نفس مدة الاختفاء
-          }, showDuration);
-        });
+            loader.remove(); // إزالة العنصر نهائياً
+          }, 2000); // نفس مدة الاختفاء
+        }, showDuration);
       });
-
+    }
+  })
+  .catch(error => {
+    console.error('Error loading loader:', error);
+    // في حالة الخطأ، نزيل placeholder
+    document.getElementById('loader-placeholder').remove();
+  });
   </script>
 </body>
 
