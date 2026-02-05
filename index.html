@@ -125,6 +125,83 @@
     color: var(--text-dark);
   }
 
+  /* شاشة التحميل */
+  #loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1208 0%, #2C1810 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  
+  .loader-logo {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #8B7355, #B8860B, #D4AF37);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: logoPulse 2s infinite;
+  }
+  
+  .loader-container {
+    width: 80px;
+    height: 80px;
+    position: relative;
+  }
+  
+  .loader-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 8px solid transparent;
+    border-radius: 50%;
+    border-top-color: #D4AF37;
+    animation: spin 1.5s linear infinite;
+  }
+  
+  .loader-circle:nth-child(2) {
+    border-top-color: #B8860B;
+    animation-delay: 0.2s;
+  }
+  
+  .loader-circle:nth-child(3) {
+    border-top-color: #8B7355;
+    animation-delay: 0.4s;
+  }
+  
+  .loading-text {
+    margin-top: 30px;
+    color: #D4AF37;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    animation: textPulse 1.5s infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes logoPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+  
+  @keyframes textPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
   /* NAVBAR STYLES - IMPROVED */
   .navbar {
     width: 100%;
@@ -1964,8 +2041,17 @@
 </head>
 
 <body>
-   <div id="loader-placeholder"></div>
-  
+  <!-- شاشة التحميل -->
+  <div id="loading-screen">
+    <div class="loader-logo">🅑🅔🅝 TRANSPORT</div>
+    <div class="loader-container">
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+    </div>
+    <div class="loading-text">LOADING...</div>
+  </div>
+
   <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <a href="#" class="logo">
@@ -2413,6 +2499,36 @@ mix-blend-mode: hard-light;
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
   <script>
+    // دالة لإخفاء شاشة التحميل
+    function hideLoadingScreen() {
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.visibility = 'hidden';
+        
+        // إزالة العنصر من الـ DOM بعد الانتهاء من الانتقال
+        setTimeout(() => {
+          if (loadingScreen.parentNode) {
+            loadingScreen.parentNode.removeChild(loadingScreen);
+          }
+        }, 800);
+      }
+    }
+
+    // استراتيجية متعددة لإخفاء الشاشة
+    // 1. عندما يكون DOM جاهزاً
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(hideLoadingScreen, 500);
+    });
+
+    // 2. عندما تحمل كل الصفحة (بما في ذلك الصور)
+    window.addEventListener('load', function() {
+      setTimeout(hideLoadingScreen, 300);
+    });
+
+    // 3. كحماية إضافية: إخفاء بعد 3 ثواني كحد أقصى
+    setTimeout(hideLoadingScreen, 3000);
+
     // NAVBAR FUNCTIONALITY
     const menuBtn = document.getElementById("menuBtn");
     const sideMenu = document.getElementById("sideMenu");
@@ -2852,42 +2968,6 @@ mix-blend-mode: hard-light;
     });
     // Also check on DOM content loaded
     document.addEventListener("DOMContentLoaded", reveal);
-
-    // تحميل شاشة التحميل من ملف منفصل
-fetch('loader.html')
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.text();
-  })
-  .then(data => {
-    document.getElementById('loader-placeholder').innerHTML = data;
-    
-    // الآن نحصل على العنصر loader بعد تحميله
-    const loader = document.getElementById('loading-screen');
-    
-    if (loader) {
-      // بعد تحميل الصفحة بالكامل، نبدأ الإخفاء
-      window.addEventListener('load', function() {
-        // مدة ظهور الشاشة قبل الاختفاء (مثال: 2 ثانية)
-        const showDuration = 2000; 
-
-        setTimeout(function() {
-          loader.style.transition = 'opacity 2s ease'; // مدة الاختفاء
-          loader.style.opacity = '0';
-          setTimeout(function() {
-            loader.remove(); // إزالة العنصر نهائياً
-          }, 2000); // نفس مدة الاختفاء
-        }, showDuration);
-      });
-    }
-  })
-  .catch(error => {
-    console.error('Error loading loader:', error);
-    // في حالة الخطأ، نزيل placeholder
-    document.getElementById('loader-placeholder').remove();
-  });
   </script>
 </body>
 
