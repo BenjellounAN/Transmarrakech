@@ -1964,7 +1964,7 @@
 </head>
 
 <body>
-    <div id="loader-placeholder"></div>
+  
   <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <a href="#" class="logo">
@@ -2853,11 +2853,112 @@ mix-blend-mode: hard-light;
     document.addEventListener("DOMContentLoaded", reveal);
 
     //loading page 
-    fetch('loader.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('loader-placeholder').innerHTML = data;
-      });
+     window.addEventListener('load', function() {
+      // إنشاء شاشة التحميل بعد اكتمال تحميل الصفحة
+      const loader = document.createElement('div');
+      loader.id = 'loading-screen';
+      loader.innerHTML = `
+        <div class="loader-container">
+          <img src="https://i.ibb.co/sJCqd2SN/AAA4-E49-F-3-BDD-4-DEE-8-E39-962-CF26-D8802.png" class="delivery" alt="Delivery loading">
+          <div class="loading-text">
+            Loading, Please Wait<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+          </div>
+          <div class="bottom-message">We hope you enjoy the experience</div>
+        </div>
+        <style>
+          #loading-screen {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(145deg, #d2bfae, #c7b29f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            top: 0;
+            left: 0;
+            opacity: 1;
+          }
+
+          .loader-container {
+            text-align: center;
+            max-width: 520px;
+            position: relative;
+          }
+
+          .delivery {
+            width: 165px;
+            animation:
+              rideReal 4.2s cubic-bezier(.55, .05, .25, 1) infinite,
+              engineVibe 0.12s linear 1.7s 8;
+          }
+
+          @keyframes rideReal {
+            0%   { transform: translateX(-260px) scale(1); }
+            35%  { transform: translateX(-20px) scale(1.05); }
+            45%  { transform: translateX(0) scale(1); }
+            60%  { transform: translateX(0) scale(1); }
+            100% { transform: translateX(460px) scale(1.08); }
+          }
+
+          @keyframes engineVibe {
+            0% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(1px) rotate(-0.6deg); }
+            50% { transform: translateX(-1px) rotate(0.6deg); }
+            75% { transform: translateX(1px) rotate(0deg); }
+            100% { transform: translateX(0) rotate(-0.6deg); }
+          }
+
+          .loading-text {
+            margin-top: 30px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 1px;
+          }
+
+          .dot {
+            opacity: 0;
+            animation: blink 1.4s infinite;
+          }
+          .dot:nth-child(1){animation-delay:0s;}
+          .dot:nth-child(2){animation-delay:.25s;}
+          .dot:nth-child(3){animation-delay:.5s;}
+          @keyframes blink {0%{opacity:0;}50%{opacity:1;}100%{opacity:0;}}
+
+          .bottom-message {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            font-family: 'Brush Script MT', cursive;
+            color: #444;
+            opacity: 0.85;
+            white-space: nowrap;
+          }
+
+          @media (max-width: 480px) {
+            .delivery { width: 130px; }
+            .loading-text { font-size: 22px; }
+            .bottom-message { font-size: 18px; bottom: 20px; }
+          }
+        </style>
+      `;
+      document.body.appendChild(loader);
+
+      // إخفاء الشاشة تدريجياً بعد ثانيتين
+      setTimeout(function() {
+        loader.style.transition = 'opacity 2s ease';
+        loader.style.opacity = '0';
+        setTimeout(function() {
+          loader.remove(); // إزالة العنصر من الصفحة نهائياً
+        }, 2000);
+      }, 100); // تأخير قليل لإظهار الشاشة قبل الاختفاء
+    });
+
 
   </script>
 </body>
